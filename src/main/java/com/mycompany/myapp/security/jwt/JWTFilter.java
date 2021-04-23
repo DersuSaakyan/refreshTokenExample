@@ -1,11 +1,13 @@
 package com.mycompany.myapp.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -28,13 +30,29 @@ public class JWTFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
         throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        String jwt = resolveToken(httpServletRequest);
-        if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
-            Authentication authentication = this.tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        try {
+            String jwt = resolveToken(request);
+            if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
+                Authentication authentication = this.tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (ExpiredJwtException e) {
+            String isRefreshToken = request.getHeader("isRefreshToken");
+            String requestURL = request.getRequestURI().toString();
+            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh-token")) {
+                allowForRefreshToken(e, request);
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private void allowForRefreshToken(ExpiredJwtException e, HttpServletRequest request) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
+
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+        request.setAttribute("claims", e.getClaims());
     }
 
     private String resolveToken(HttpServletRequest request) {
