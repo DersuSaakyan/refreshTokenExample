@@ -11,6 +11,7 @@ import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,7 +41,8 @@ public class DomainUserDetailsService implements UserDetailsService {
         User user = getUserEntityByUsername(username.toLowerCase())
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User with name=%s was not found", username)));
         storeSessionUser(user);
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), new ArrayList<>());
+        //Authority Error
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), new HashSet<>());
     }
 
     private void storeSessionUser(User user) {

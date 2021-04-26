@@ -37,8 +37,8 @@ public class TokenProvider {
     @Value("jhipster.security.authentication.jwt.token-validity-in-seconds")
     private String jwtExpirationMs;
 
-    @Value("jhipster.security.authentication.jwt.base64-secret")
-    private String jwtSecret;
+    //    @Value("jhipster.security.authentication.jwt.base64-secret")
+    //    private String jwtSecret;
 
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         byte[] keyBytes;
@@ -100,8 +100,8 @@ public class TokenProvider {
             .setSubject(username)
             .setIssuedAt(new Date())
             //null pointer exception for jwtExpirationMs
-            .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .setExpiration(new Date((new Date()).getTime() + this.tokenValidityInMilliseconds))
+            .signWith(SignatureAlgorithm.HS512, this.key)
             .compact();
     }
 

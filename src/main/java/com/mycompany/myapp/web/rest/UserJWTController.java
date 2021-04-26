@@ -58,6 +58,8 @@ public class UserJWTController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         SessionUser sessionUser = authService.getSessionUser();
+        System.out.println(sessionUser);
+
         String accessToken = tokenProvider.createToken(authentication, loginVM.isRememberMe());
         String refreshToken = authService.createRefreshToken(sessionUser.getId()).getToken();
 
