@@ -1,7 +1,10 @@
 package com.mycompany.myapp.security.session;
 
+import com.mycompany.myapp.domain.Authority;
 import com.mycompany.myapp.domain.User;
 import java.io.Serializable;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SessionUser implements Serializable {
 
@@ -13,6 +16,15 @@ public class SessionUser implements Serializable {
     private String login;
     private String firstName;
     private String lastName;
+    private Set<String> authority;
+
+    public Set<String> getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Set<String> authority) {
+        this.authority = authority;
+    }
 
     public Long getId() {
         return id;
@@ -55,6 +67,7 @@ public class SessionUser implements Serializable {
         sessionUser.setFirstName(user.getFirstName());
         sessionUser.setLastName(user.getLastName());
         sessionUser.setLogin(user.getLogin());
+        sessionUser.setAuthority(user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()));
 
         return sessionUser;
     }
@@ -74,6 +87,8 @@ public class SessionUser implements Serializable {
             ", lastName='" +
             lastName +
             '\'' +
+            ", authority=" +
+            authority +
             '}'
         );
     }

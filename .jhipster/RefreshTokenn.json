@@ -1,0 +1,28 @@
+{
+  "name": "RefreshTokenn",
+  "fields": [
+    {
+      "fieldName": "regionName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "expiryDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "token",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "refresh_tokenn",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210426112232"
+}

@@ -1,0 +1,26 @@
+{
+  "jHipsterApp": {
+    "refreshTokenn": {
+      "home": {
+        "title": "Refresh Tokenns",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Refresh Tokenn",
+        "createOrEditLabel": "Создать или отредактировать Refresh Tokenn",
+        "notFound": "Refresh Tokenns не найдено"
+      },
+      "created": "Новый Refresh Tokenn создан с идентификатором {{ param }}",
+      "updated": "Refresh Tokenn обновлен с идентификатором {{ param }}",
+      "deleted": "Refresh Tokenn удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Refresh Tokenn {{ id }}?"
+      },
+      "detail": {
+        "title": "Refresh Tokenn"
+      },
+      "id": "ID",
+      "regionName": "Region Name",
+      "expiryDate": "Expiry Date",
+      "token": "Token"
+    }
+  }
+}

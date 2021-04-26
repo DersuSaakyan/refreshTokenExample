@@ -40,9 +40,15 @@ public class DomainUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = getUserEntityByUsername(username.toLowerCase())
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User with name=%s was not found", username)));
+
+        List<GrantedAuthority> grantedAuthorities = user
+            .getAuthorities()
+            .stream()
+            .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+            .collect(Collectors.toList());
+
         storeSessionUser(user);
-        //Authority Error
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), new HashSet<>());
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), grantedAuthorities);
     }
 
     private void storeSessionUser(User user) {
@@ -54,17 +60,5 @@ public class DomainUserDetailsService implements UserDetailsService {
     private Optional<User> getUserEntityByUsername(String username) {
         User user = userRepository.findByLogin(username);
         return Optional.ofNullable(user);
-    }
-
-    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {
-        if (!user.isActivated()) {
-            throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
-        }
-        List<GrantedAuthority> grantedAuthorities = user
-            .getAuthorities()
-            .stream()
-            .map(authority -> new SimpleGrantedAuthority(authority.getName()))
-            .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), grantedAuthorities);
     }
 }

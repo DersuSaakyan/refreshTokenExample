@@ -58,7 +58,6 @@ public class UserJWTController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         SessionUser sessionUser = authService.getSessionUser();
-        System.out.println(sessionUser);
 
         String accessToken = tokenProvider.createToken(authentication, loginVM.isRememberMe());
         String refreshToken = authService.createRefreshToken(sessionUser.getId()).getToken();
@@ -71,14 +70,14 @@ public class UserJWTController {
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenVM request) {
         String requestRefreshToken = request.getRefreshToken();
+        SessionUser sessionUser = authService.getSessionUser();
 
         return authService
             .findByToken(requestRefreshToken)
             .map(authService::verifyExpiration)
-            .map(RefreshToken::getUser)
             .map(
-                user -> {
-                    String token = tokenProvider.generateTokenFromUsername(user.getLogin());
+                u -> {
+                    String token = tokenProvider.generateTokenFromSessionUser(sessionUser);
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 }
             )
@@ -98,7 +97,7 @@ public class UserJWTController {
             this.refreshToken = refreshToken;
         }
 
-        @JsonProperty("id_token")
+        @JsonProperty("access_token")
         String getIdToken() {
             return idToken;
         }

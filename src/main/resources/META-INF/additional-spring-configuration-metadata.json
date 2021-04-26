@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "jhipster.security.authentication.jwt.token-validity-in-seconds-for-refresh",
+      "type": "java.lang.String",
+      "description": "Description for jhipster.security.authentication.jwt.token-validity-in-seconds-for-refresh."
+    }
+  ]
+}

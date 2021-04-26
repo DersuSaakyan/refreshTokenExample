@@ -1,5 +1,7 @@
 package com.mycompany.myapp.security.jwt;
 
+import com.mycompany.myapp.domain.Authority;
+import com.mycompany.myapp.security.session.SessionUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -9,11 +11,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -34,11 +39,11 @@ public class TokenProvider {
 
     private final long tokenValidityInMillisecondsForRememberMe;
 
-    @Value("jhipster.security.authentication.jwt.token-validity-in-seconds")
-    private String jwtExpirationMs;
+    @Autowired
+    private AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    //    @Value("jhipster.security.authentication.jwt.base64-secret")
-    //    private String jwtSecret;
+    @Autowired
+    private TokenProvider tokenProvider;
 
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         byte[] keyBytes;
@@ -94,14 +99,16 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
-    public String generateTokenFromUsername(String username) {
+    public String generateTokenFromSessionUser(SessionUser user) {
+        String authorities = String.join(",", user.getAuthority());
+
         return Jwts
             .builder()
-            .setSubject(username)
+            .setSubject(user.getLogin())
+            .claim(AUTHORITIES_KEY, authorities)
             .setIssuedAt(new Date())
-            //null pointer exception for jwtExpirationMs
+            .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(new Date((new Date()).getTime() + this.tokenValidityInMilliseconds))
-            .signWith(SignatureAlgorithm.HS512, this.key)
             .compact();
     }
 
