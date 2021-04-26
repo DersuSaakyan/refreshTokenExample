@@ -3,7 +3,6 @@ package com.mycompany.myapp.web.rest;
 import static com.mycompany.myapp.security.session.SessionUser.SESSION_USER_KEY;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mycompany.myapp.domain.RefreshToken;
 import com.mycompany.myapp.security.jwt.JWTFilter;
 import com.mycompany.myapp.security.jwt.TokenProvider;
 import com.mycompany.myapp.security.session.CurrentUser;
@@ -22,8 +21,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * Controller to authenticate users.

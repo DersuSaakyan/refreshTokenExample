@@ -16,6 +16,10 @@ import passwordReset, { PasswordResetState } from 'app/modules/account/password-
 import refreshTokenn, {
   RefreshTokennState
 } from 'app/entities/refresh-tokenn/refresh-tokenn.reducer';
+// prettier-ignore
+import refreshTokenEntity, {
+  RefreshTokenEntityState
+} from 'app/entities/refresh-token-entity/refresh-token-entity.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -30,6 +34,7 @@ export interface IRootState {
   readonly password: PasswordState;
   readonly settings: SettingsState;
   readonly refreshTokenn: RefreshTokennState;
+  readonly refreshTokenEntity: RefreshTokenEntityState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -46,6 +51,7 @@ const rootReducer = combineReducers<IRootState>({
   password,
   settings,
   refreshTokenn,
+  refreshTokenEntity,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 });

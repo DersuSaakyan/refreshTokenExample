@@ -42,7 +42,7 @@
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
     "languages": ["ru"],
-    "entities": ["RefreshTokenn"],
-    "lastLiquibaseTimestamp": 1619436152000
+    "entities": ["RefreshTokenn", "RefreshTokenEntity"],
+    "lastLiquibaseTimestamp": 1619466512000
   }
 }

@@ -2,8 +2,8 @@ package com.mycompany.myapp.service;
 
 import static com.mycompany.myapp.security.session.SessionUser.SESSION_USER_KEY;
 
-import com.mycompany.myapp.domain.RefreshToken;
-import com.mycompany.myapp.repository.RefreshTokenRepository;
+import com.mycompany.myapp.domain.RefreshTokenEntity;
+import com.mycompany.myapp.repository.RefreshTokenEntityRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.session.SessionUser;
 import com.mycompany.myapp.web.rest.errors.TokenRefreshException;
@@ -21,7 +21,7 @@ import tech.jhipster.config.JHipsterProperties;
 @Service
 public class AuthService {
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenEntityRepository refreshTokenEntityRepository;
     private final UserRepository userRepository;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -30,25 +30,25 @@ public class AuthService {
     private String refreshTokenDurationMs;
 
     public AuthService(
-        RefreshTokenRepository refreshTokenRepository,
+        RefreshTokenEntityRepository refreshTokenRepository,
         UserRepository userRepository,
         JHipsterProperties jHipsterProperties,
         AuthenticationManagerBuilder authenticationManagerBuilder
     ) {
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenEntityRepository = refreshTokenRepository;
         this.userRepository = userRepository;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-    public RefreshToken createRefreshToken(Long userId) {
-        RefreshToken refreshToken = refreshTokenRepository.findOneByUserId(userId);
+    public RefreshTokenEntity createRefreshToken(Long userId) {
+        RefreshTokenEntity refreshToken = refreshTokenEntityRepository.findOneByUserId(userId);
         if (refreshToken == null) {
-            refreshToken = new RefreshToken();
+            refreshToken = new RefreshTokenEntity();
         }
         refreshToken.setUser(userRepository.findById(userId).get());
         refreshToken.setExpiryDate(Instant.now().plusMillis(Long.parseLong(refreshTokenDurationMs)));
         refreshToken.setToken(UUID.randomUUID().toString());
-        refreshToken = refreshTokenRepository.save(refreshToken);
+        refreshToken = refreshTokenEntityRepository.save(refreshToken);
         return refreshToken;
     }
 
@@ -57,13 +57,13 @@ public class AuthService {
         return (SessionUser) servletRequestAttributes.getRequest().getSession().getAttribute(SESSION_USER_KEY);
     }
 
-    public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByToken(token);
+    public Optional<RefreshTokenEntity> findByToken(String token) {
+        return refreshTokenEntityRepository.findByToken(token);
     }
 
-    public RefreshToken verifyExpiration(RefreshToken token) {
+    public RefreshTokenEntity verifyExpiration(RefreshTokenEntity token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
-            refreshTokenRepository.delete(token);
+            refreshTokenEntityRepository.delete(token);
             throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");
         }
         return token;
@@ -71,6 +71,6 @@ public class AuthService {
 
     @Transactional
     public int deleteByUserId(Long userId) {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
+        return refreshTokenEntityRepository.deleteByUser(userRepository.findById(userId).get());
     }
 }

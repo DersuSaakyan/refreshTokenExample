@@ -1,0 +1,26 @@
+{
+  "jHipsterApp": {
+    "refreshTokenEntity": {
+      "home": {
+        "title": "Refresh Token Entities",
+        "refreshListLabel": "Обновить список",
+        "createLabel": "Создать новый Refresh Token Entity",
+        "createOrEditLabel": "Создать или отредактировать Refresh Token Entity",
+        "notFound": "Refresh Token Entities не найдено"
+      },
+      "created": "Новый Refresh Token Entity создан с идентификатором {{ param }}",
+      "updated": "Refresh Token Entity обновлен с идентификатором {{ param }}",
+      "deleted": "Refresh Token Entity удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Refresh Token Entity {{ id }}?"
+      },
+      "detail": {
+        "title": "Refresh Token Entity"
+      },
+      "id": "ID",
+      "expiryDate": "Expiry Date",
+      "token": "Token",
+      "user": "User"
+    }
+  }
+}
