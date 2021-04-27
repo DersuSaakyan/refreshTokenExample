@@ -8,6 +8,8 @@ import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.session.SessionUser;
 import com.mycompany.myapp.web.rest.errors.TokenRefreshException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +48,7 @@ public class AuthService {
             refreshToken = new RefreshTokenEntity();
         }
         refreshToken.setUser(userRepository.findById(userId).get());
+
         refreshToken.setExpiryDate(Instant.now().plusMillis(Long.parseLong(refreshTokenDurationMs)));
         refreshToken.setToken(UUID.randomUUID().toString());
         refreshToken = refreshTokenEntityRepository.save(refreshToken);

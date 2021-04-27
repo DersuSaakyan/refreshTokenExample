@@ -35,7 +35,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/test
     username: postgres
-    password: root
+    password: inconcept
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -45,10 +45,18 @@ spring:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.gmail.com
+    username: derensahakyan7@gmail.com
+    password: 794613258derenik#
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
